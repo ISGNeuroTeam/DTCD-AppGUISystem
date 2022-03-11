@@ -1,0 +1,11 @@
+{
+  "id": "HOMEPAGE",
+  "title": "App main page",
+  "areas": {
+    "top": null,
+    "left": { "name": "PrimitiveLibraryPanel", "version": "0.2.0" },
+    "center": null,
+    "right": { "name": "PrimitiveLibraryPanel", "version": "0.2.0" },
+    "bottom": null
+  }
+}

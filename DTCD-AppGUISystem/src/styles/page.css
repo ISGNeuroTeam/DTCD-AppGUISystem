@@ -1,0 +1,28 @@
+.page {
+  display: grid;
+  height: 100vh;
+  grid-template-rows: auto 1fr auto;
+  grid-template-columns: auto 1fr auto;
+  grid-template-areas: 'top top top' 'left center right' 'bottom bottom bottom';
+}
+
+#pageAreaTop {
+  grid-area: top;
+}
+
+#pageAreaBottom {
+  grid-area: bottom;
+}
+
+#pageAreaLeft {
+  grid-area: left;
+}
+
+#pageAreaRight {
+  grid-area: right;
+}
+
+#pageAreaCenter {
+  grid-area: center;
+  overflow: auto;
+}
