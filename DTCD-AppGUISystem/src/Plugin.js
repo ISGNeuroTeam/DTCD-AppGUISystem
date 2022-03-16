@@ -1,18 +1,23 @@
 import './styles/page.css';
 import pluginMeta from './Plugin.Meta';
 
-import { SystemPlugin } from './../../DTCD-SDK';
+import {
+  SystemPlugin,
+  LogSystemAdapter,
+  EventSystemAdapter,
+} from './../../DTCD-SDK';
+
 import homepageConfig from './utils/_HOMEPAGE.json';
+import defaultPageAreas from './utils/defaultPageAreas';
 
 export class AppGUISystem extends SystemPlugin {
 
-  #pageAreas = {
-    top: { id: 'pageAreaTop' },
-    left: { id: 'pageAreaLeft' },
-    center: { id: 'pageAreaCenter' },
-    right: { id: 'pageAreaRight' },
-    bottom: { id: 'pageAreaBottom' },
-  }
+  #logSystem;
+  #eventSystem;
+  #workspaceSystem;
+
+  #page;
+  #pageAreas = defaultPageAreas;
 
   static getRegistrationMeta() {
     return pluginMeta;
@@ -20,25 +25,30 @@ export class AppGUISystem extends SystemPlugin {
 
   constructor(guid) {
     super();
+    this.#logSystem = new LogSystemAdapter('0.5.0', guid, pluginMeta.name);
+    this.#eventSystem = new EventSystemAdapter('0.4.0', guid);
+    this.#workspaceSystem =  this.getSystem('WorkspaceSystem', '0.4.0');
   }
 
-  init() {
-    this.#initPage();
+  async init() {
+    this.#page = this.#initPage();
     this.applyPageConfig(homepageConfig);
+    const { el } = this.#pageAreas.center;
+    this.#workspaceSystem.mountDashboardContainer(el);
   }
 
   mountPanelToGrid(options = {}) {
     const { area, name, version } = options;
-    const { id, el, plugin } = this.#pageAreas[area];
+    const { id, el, panel } = this.#pageAreas[area];
 
-    if (plugin) {
-      this.uninstallPluginByInstance(plugin);
+    if (panel) {
+      this.uninstallPluginByInstance(panel);
     }
 
     const mountID = `${id}--panel`;
     el.innerHTML = `<div id="${mountID}"></div>`;
 
-    this.#pageAreas[area].plugin = this.installPanel({
+    this.#pageAreas[area].panel = this.installPanel({
       name,
       version,
       selector: `#${mountID}`,
@@ -48,28 +58,33 @@ export class AppGUISystem extends SystemPlugin {
   applyPageConfig(config = {}) {
     const { areas } = config;
     for (const [area, content] of Object.entries(areas)) {
-      if (!content) continue;
+      if (!content) {
+        this.#pageAreas[area].el.innerHTML = '';
+        continue;
+      };
       const { name, version } = content;
       this.mountPanelToGrid({ area, name, version });
     }
   }
 
   #initPage() {
+    if (document.querySelector('#page.page')) {
+      this.#logSystem.debug('The page has already been initiated');
+      return false;
+    }
+
     const page = document.createElement('div');
-    page.className = 'page';
-    page.innerHTML = `
-      <header id="pageAreaTop"></header>
-      <aside id="pageAreaLeft"></aside>
-      <main id="pageAreaCenter"></main>
-      <aside id="pageAreaRight"></aside>
-      <footer id="pageAreaBottom"></footer>
-    `;
-    document.body.appendChild(page);
+    page.id = 'page';
+    page.className = "page";
 
     Object.values(this.#pageAreas).forEach(area => {
-      area.el = document.getElementById(area.id);
+      const el = document.createElement(area.tagName);
+      el.id = area.id;
+      area.el = el;
+      page.appendChild(el);
     });
 
+    document.body.appendChild(page);
     return page;
   }
 

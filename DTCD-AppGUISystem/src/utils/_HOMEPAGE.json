@@ -3,9 +3,9 @@
   "title": "App main page",
   "areas": {
     "top": null,
-    "left": { "name": "PrimitiveLibraryPanel", "version": "0.2.0" },
+    "left": null,
     "center": null,
-    "right": { "name": "PrimitiveLibraryPanel", "version": "0.2.0" },
+    "right": { "name": "WorkspacePanel", "version": "0.2.0" },
     "bottom": null
   }
 }
