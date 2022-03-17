@@ -1,17 +1,11 @@
 import './styles/page.css';
 import pluginMeta from './Plugin.Meta';
 
-import {
-  SystemPlugin,
-  LogSystemAdapter,
-  EventSystemAdapter,
-} from './../../DTCD-SDK';
+import { SystemPlugin, LogSystemAdapter, EventSystemAdapter } from './../../DTCD-SDK';
 
-import homepageConfig from './utils/_HOMEPAGE.json';
 import defaultPageAreas from './utils/defaultPageAreas';
 
 export class AppGUISystem extends SystemPlugin {
-
   #logSystem;
   #eventSystem;
   #workspaceSystem;
@@ -27,14 +21,11 @@ export class AppGUISystem extends SystemPlugin {
     super();
     this.#logSystem = new LogSystemAdapter('0.5.0', guid, pluginMeta.name);
     this.#eventSystem = new EventSystemAdapter('0.4.0', guid);
-    this.#workspaceSystem =  this.getSystem('WorkspaceSystem', '0.4.0');
+    this.#workspaceSystem = this.getSystem('WorkspaceSystem', '0.4.0');
   }
 
   async init() {
     this.#page = this.#initPage();
-    this.applyPageConfig(homepageConfig);
-    const { el } = this.#pageAreas.center;
-    this.#workspaceSystem.mountDashboardContainer(el);
   }
 
   mountPanelToGrid(options = {}) {
@@ -61,9 +52,14 @@ export class AppGUISystem extends SystemPlugin {
       if (!content) {
         this.#pageAreas[area].el.innerHTML = '';
         continue;
-      };
+      }
       const { name, version } = content;
-      this.mountPanelToGrid({ area, name, version });
+      if (name === 'WorkspaceSystem') {
+        const { el } = this.#pageAreas[area];
+        this.#workspaceSystem.mountDashboardContainer(el);
+      } else {
+        this.mountPanelToGrid({ area, name, version });
+      }
     }
   }
 
@@ -75,7 +71,7 @@ export class AppGUISystem extends SystemPlugin {
 
     const page = document.createElement('div');
     page.id = 'page';
-    page.className = "page";
+    page.className = 'page';
 
     Object.values(this.#pageAreas).forEach(area => {
       const el = document.createElement(area.tagName);
@@ -87,5 +83,4 @@ export class AppGUISystem extends SystemPlugin {
     document.body.appendChild(page);
     return page;
   }
-
 }
