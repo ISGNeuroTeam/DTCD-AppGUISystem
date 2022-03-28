@@ -1,9 +1,15 @@
 .page {
   display: grid;
   height: 100vh;
+  overflow: hidden;
   grid-template-rows: auto 1fr auto;
-  grid-template-columns: auto 1fr auto;
+  grid-template-columns: 320px 1fr 320px;
   grid-template-areas: 'top top top' 'left center right' 'bottom bottom bottom';
+}
+
+.page-area {
+  z-index: 1;
+  overflow: auto;
 }
 
 #pageAreaTop {
@@ -16,13 +22,17 @@
 
 #pageAreaLeft {
   grid-area: left;
+  transition: transform .3s;
+  transform: translateX(-100%);
 }
 
 #pageAreaRight {
   grid-area: right;
+  transition: transform .3s;
+  transform: translateX(100%);
 }
 
 #pageAreaCenter {
-  grid-area: center;
-  overflow: auto;
+  grid-area: left-start / left-start / right-end / right-end;
+  transition: margin .3s;
 }

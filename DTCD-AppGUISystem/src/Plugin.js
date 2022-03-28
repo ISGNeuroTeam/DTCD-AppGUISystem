@@ -3,6 +3,7 @@ import pluginMeta from './Plugin.Meta';
 
 import { SystemPlugin, LogSystemAdapter, EventSystemAdapter } from './../../DTCD-SDK';
 
+import Sidebar from './utils/Sidebar';
 import defaultPageAreas from './utils/defaultPageAreas';
 
 export class AppGUISystem extends SystemPlugin {
@@ -11,6 +12,7 @@ export class AppGUISystem extends SystemPlugin {
   #workspaceSystem;
 
   #page;
+  #sidebars = {};
   #pageAreas = defaultPageAreas;
 
   static getRegistrationMeta() {
@@ -63,6 +65,21 @@ export class AppGUISystem extends SystemPlugin {
     }
   }
 
+  toggleSidebar(side, open) {
+    if (!['left', 'right'].includes(side)) {
+      this.#logSystem.debug(`Incorrect sidebar name: ${side}`);
+      return;
+    }
+
+    const sidebar = this.#sidebars[side];
+
+    if (typeof open !== 'boolean') {
+      return sidebar.toggle();
+    }
+
+    return open ? sidebar.open() : sidebar.hide()
+  }
+
   #initPage() {
     if (document.querySelector('#page.page')) {
       this.#logSystem.debug('The page has already been initiated');
@@ -73,10 +90,17 @@ export class AppGUISystem extends SystemPlugin {
     page.id = 'page';
     page.className = 'page';
 
-    Object.values(this.#pageAreas).forEach(area => {
+    Object.entries(this.#pageAreas).forEach(entry => {
+      const [name, area] = entry;
       const el = document.createElement(area.tagName);
       el.id = area.id;
+      el.className = 'page-area';
       area.el = el;
+
+      if (['left', 'right'].includes(name)) {
+        this.#sidebars[name] = new Sidebar(name, el);
+      }
+
       page.appendChild(el);
     });
 
