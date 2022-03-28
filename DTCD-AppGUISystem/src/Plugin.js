@@ -50,6 +50,10 @@ export class AppGUISystem extends SystemPlugin {
 
   applyPageConfig(config = {}) {
     const { areas } = config;
+
+    this.toggleSidebar('left', false);
+    this.toggleSidebar('right', false);
+
     for (const [area, content] of Object.entries(areas)) {
       if (!content) {
         this.#pageAreas[area].el.innerHTML = '';
