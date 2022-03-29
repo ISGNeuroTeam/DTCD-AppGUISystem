@@ -23,6 +23,7 @@ export class AppGUISystem extends SystemPlugin {
     super();
     this.#logSystem = new LogSystemAdapter('0.5.0', guid, pluginMeta.name);
     this.#eventSystem = new EventSystemAdapter('0.4.0', guid);
+    this.#eventSystem.registerPluginInstance(this, ['AreaClicked']);
     this.#workspaceSystem = this.getSystem('WorkspaceSystem', '0.4.0');
   }
 
@@ -51,6 +52,7 @@ export class AppGUISystem extends SystemPlugin {
   applyPageConfig(config = {}) {
     const { areas } = config;
 
+    this.#eventSystem.resetSystem();
     this.toggleSidebar('left', false);
     this.toggleSidebar('right', false);
 
@@ -97,6 +99,12 @@ export class AppGUISystem extends SystemPlugin {
     Object.entries(this.#pageAreas).forEach(entry => {
       const [name, area] = entry;
       const el = document.createElement(area.tagName);
+      el.onclick = () => {
+        if (area.panel) {
+          const guid = this.getGUID(area.panel);
+          this.#eventSystem.publishEvent('AreaClicked', { guid });
+        }
+      };
       el.id = area.id;
       el.className = 'page-area';
       area.el = el;
