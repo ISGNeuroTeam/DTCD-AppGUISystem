@@ -1,7 +1,12 @@
 import './styles/page.css';
 import pluginMeta from './Plugin.Meta';
 
-import { SystemPlugin, LogSystemAdapter, EventSystemAdapter } from './../../DTCD-SDK';
+import {
+  SystemPlugin,
+  LogSystemAdapter,
+  EventSystemAdapter,
+  StyleSystemAdapter,
+} from './../../DTCD-SDK';
 
 import Sidebar from './utils/Sidebar';
 import defaultPageAreas from './utils/defaultPageAreas';
@@ -10,6 +15,7 @@ export class AppGUISystem extends SystemPlugin {
   #logSystem;
   #eventSystem;
   #workspaceSystem;
+  #styleSystem;
 
   #page;
   #sidebars = {};
@@ -23,6 +29,7 @@ export class AppGUISystem extends SystemPlugin {
     super();
     this.#logSystem = new LogSystemAdapter('0.5.0', guid, pluginMeta.name);
     this.#eventSystem = new EventSystemAdapter('0.4.0', guid);
+    this.#styleSystem = new StyleSystemAdapter('0.4.0');
     this.#eventSystem.registerPluginInstance(this, ['AreaClicked']);
     this.#workspaceSystem = this.getSystem('WorkspaceSystem', '0.4.0');
   }
@@ -61,13 +68,15 @@ export class AppGUISystem extends SystemPlugin {
         this.#pageAreas[area].el.innerHTML = '';
         continue;
       }
-      const { name, version } = content;
+      const { name, version, configuration } = content;
       if (name === 'WorkspaceSystem') {
         const { el } = this.#pageAreas[area];
         this.#workspaceSystem.mountDashboardContainer(el);
-      } else {
-        this.mountPanelToGrid({ area, name, version });
+        continue;
       }
+
+      this.mountPanelToGrid({ area, name, version });
+      if (configuration) this.#pageAreas[area].panel.setPluginConfig(configuration);
     }
   }
 
@@ -83,7 +92,7 @@ export class AppGUISystem extends SystemPlugin {
       return sidebar.toggle();
     }
 
-    return open ? sidebar.open() : sidebar.hide()
+    return open ? sidebar.open() : sidebar.hide();
   }
 
   #initPage() {
@@ -95,6 +104,7 @@ export class AppGUISystem extends SystemPlugin {
     const page = document.createElement('div');
     page.id = 'page';
     page.className = 'page';
+    this.#styleSystem.setVariablesToElement(page, this.#styleSystem.getCurrentTheme());
 
     Object.entries(this.#pageAreas).forEach(entry => {
       const [name, area] = entry;
