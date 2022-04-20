@@ -27,6 +27,7 @@ export class AppGUISystem extends SystemPlugin {
 
   constructor(guid) {
     super();
+    this.guid = guid;
     this.#logSystem = new LogSystemAdapter('0.5.0', guid, pluginMeta.name);
     this.#eventSystem = new EventSystemAdapter('0.4.0', guid);
     this.#styleSystem = new StyleSystemAdapter('0.4.0');
@@ -105,6 +106,12 @@ export class AppGUISystem extends SystemPlugin {
     page.id = 'page';
     page.className = 'page';
     this.#styleSystem.setVariablesToElement(page, this.#styleSystem.getCurrentTheme());
+    this.#eventSystem.subscribe(
+      this.#styleSystem.getGUID(),
+      'ThemeUpdate',
+      this.guid,
+      'updateTheme'
+    );
 
     Object.entries(this.#pageAreas).forEach(entry => {
       const [name, area] = entry;
@@ -128,5 +135,9 @@ export class AppGUISystem extends SystemPlugin {
 
     document.body.appendChild(page);
     return page;
+  }
+
+  updateTheme() {
+    this.#styleSystem.setVariablesToElement(this.#page, this.#styleSystem.getCurrentTheme());
   }
 }
