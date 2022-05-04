@@ -69,7 +69,9 @@ export class AppGUISystem extends SystemPlugin {
         this.#pageAreas[area].el.innerHTML = '';
         continue;
       }
+
       const { name, version, configuration } = content;
+
       if (name === 'WorkspaceSystem') {
         const { el } = this.#pageAreas[area];
         this.#workspaceSystem.mountDashboardContainer(el);
@@ -77,7 +79,10 @@ export class AppGUISystem extends SystemPlugin {
       }
 
       this.mountPanelToGrid({ area, name, version });
-      if (configuration) this.#pageAreas[area].panel.setPluginConfig(configuration);
+
+      if (configuration) {
+        this.#pageAreas[area].panel.setPluginConfig(configuration);
+      }
     }
   }
 
@@ -105,6 +110,7 @@ export class AppGUISystem extends SystemPlugin {
     const page = document.createElement('div');
     page.id = 'page';
     page.className = 'page';
+
     this.#styleSystem.setVariablesToElement(page, this.#styleSystem.getCurrentTheme());
     this.#eventSystem.subscribe(
       this.#styleSystem.getGUID(),
@@ -116,20 +122,19 @@ export class AppGUISystem extends SystemPlugin {
     Object.entries(this.#pageAreas).forEach(entry => {
       const [name, area] = entry;
       const el = document.createElement(area.tagName);
+      el.id = area.id;
       el.onclick = () => {
         if (area.panel) {
           const guid = this.getGUID(area.panel);
           this.#eventSystem.publishEvent('AreaClicked', { guid });
         }
       };
-      el.id = area.id;
-      el.className = 'page-area';
-      area.el = el;
 
       if (['left', 'right'].includes(name)) {
         this.#sidebars[name] = new Sidebar(name, el);
       }
 
+      area.el = el;
       page.appendChild(el);
     });
 

@@ -7,11 +7,6 @@
   grid-template-areas: 'top top top' 'left center right' 'bottom bottom bottom';
 }
 
-.page-area {
-  z-index: 1;
-  overflow: auto;
-}
-
 #pageAreaTop {
   grid-area: top;
 }
@@ -35,4 +30,5 @@
 #pageAreaCenter {
   grid-area: left-start / left-start / right-end / right-end;
   transition: margin .3s;
+  overflow: auto;
 }

@@ -11,3 +11,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - plugin init
 - ability to toggle sidebars
 - AreaClicked event and EventSystem reset
+
+### Fixed
+- content overflow in page areas
