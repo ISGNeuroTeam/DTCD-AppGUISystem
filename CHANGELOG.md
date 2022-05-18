@@ -8,9 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [UNRELEASED]
 
 ### Added
+
 - plugin init
 - ability to toggle sidebars
 - AreaClicked event and EventSystem reset
 
 ### Fixed
+
 - content overflow in page areas
+- panel isntance was existing after workspacesystem mounts to it's area

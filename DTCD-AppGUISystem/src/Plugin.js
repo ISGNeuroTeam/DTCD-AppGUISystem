@@ -44,7 +44,15 @@ export class AppGUISystem extends SystemPlugin {
     const { id, el, panel } = this.#pageAreas[area];
 
     if (panel) {
+      // const panelMeta = panel.constructor.getRegistrationMeta();
+      // if (panelMeta.name === name && panelMeta.version === version) return;
       this.uninstallPluginByInstance(panel);
+    }
+
+    if (name === 'WorkspaceSystem') {
+      const { el } = this.#pageAreas[area];
+      this.#workspaceSystem.mountDashboardContainer(el);
+      return;
     }
 
     const mountID = `${id}--panel`;
@@ -71,12 +79,6 @@ export class AppGUISystem extends SystemPlugin {
       }
 
       const { name, version, configuration } = content;
-
-      if (name === 'WorkspaceSystem') {
-        const { el } = this.#pageAreas[area];
-        this.#workspaceSystem.mountDashboardContainer(el);
-        continue;
-      }
 
       this.mountPanelToGrid({ area, name, version });
 
