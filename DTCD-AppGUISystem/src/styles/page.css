@@ -1,0 +1,34 @@
+.page {
+  display: grid;
+  height: 100vh;
+  overflow: hidden;
+  grid-template-rows: auto 1fr auto;
+  grid-template-columns: 320px 1fr 320px;
+  grid-template-areas: 'top top top' 'left center right' 'bottom bottom bottom';
+}
+
+#pageAreaTop {
+  grid-area: top;
+}
+
+#pageAreaBottom {
+  grid-area: bottom;
+}
+
+#pageAreaLeft {
+  grid-area: left;
+  transition: transform .3s;
+  transform: translateX(-100%);
+}
+
+#pageAreaRight {
+  grid-area: right;
+  transition: transform .3s;
+  transform: translateX(100%);
+}
+
+#pageAreaCenter {
+  grid-area: left-start / left-start / right-end / right-end;
+  transition: margin .3s;
+  overflow: auto;
+}
