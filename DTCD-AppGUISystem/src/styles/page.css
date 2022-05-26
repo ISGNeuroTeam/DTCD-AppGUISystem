@@ -31,4 +31,5 @@
   grid-area: left-start / left-start / right-end / right-end;
   transition: margin .3s;
   overflow: auto;
+  background-color: var(--background_secondary);
 }

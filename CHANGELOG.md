@@ -12,6 +12,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - plugin init
 - ability to toggle sidebars
 - AreaClicked event and EventSystem reset
+- html layout and styles for page 403 
+- html layout and styles for page 404 
+- functions for displaying pages
 
 ### Fixed
 
