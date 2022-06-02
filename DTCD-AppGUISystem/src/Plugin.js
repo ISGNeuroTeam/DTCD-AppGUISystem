@@ -72,7 +72,7 @@ export class AppGUISystem extends SystemPlugin {
   applyPageConfig(config = {}) {
     const { areas } = config;
 
-    this.#eventSystem.resetSystem();
+    this.resetSystems();
     this.toggleSidebar('left', false);
     this.toggleSidebar('right', false);
 
