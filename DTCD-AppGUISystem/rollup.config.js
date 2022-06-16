@@ -4,6 +4,7 @@ import resolve from '@rollup/plugin-node-resolve';
 import babel from '@rollup/plugin-babel';
 import json from '@rollup/plugin-json';
 import html from 'rollup-plugin-html';
+import image from '@rollup/plugin-image';
 
 import pluginMeta from './src/Plugin.Meta';
 import { version } from './package.json';
@@ -21,6 +22,7 @@ const plugins = [
   html({ include: '**/*.html' }),
   styles({ mode: 'inject' }),
   json(),
+  image(),
 ];
 
 export default {

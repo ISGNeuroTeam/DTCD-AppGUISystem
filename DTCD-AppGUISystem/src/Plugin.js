@@ -1,6 +1,3 @@
-import './styles/page.css';
-import pluginMeta from './Plugin.Meta';
-
 import {
   SystemPlugin,
   LogSystemAdapter,
@@ -11,6 +8,12 @@ import {
 import Sidebar from './utils/Sidebar';
 import defaultPageAreas from './utils/defaultPageAreas';
 
+import './styles/page.css';
+import './styles/page404.scss';
+import pluginMeta from './Plugin.Meta';
+import Page403Html from './templates/page403.html';
+import Page404Html from './templates/page404.html';
+
 export class AppGUISystem extends SystemPlugin {
   #logSystem;
   #eventSystem;
@@ -20,6 +23,7 @@ export class AppGUISystem extends SystemPlugin {
   #page;
   #sidebars = {};
   #pageAreas = defaultPageAreas;
+  #pageAreaCenter;
 
   static getRegistrationMeta() {
     return pluginMeta;
@@ -68,7 +72,7 @@ export class AppGUISystem extends SystemPlugin {
   applyPageConfig(config = {}) {
     const { areas } = config;
 
-    this.#eventSystem.resetSystem();
+    this.resetSystems();
     this.toggleSidebar('left', false);
     this.toggleSidebar('right', false);
 
@@ -138,6 +142,10 @@ export class AppGUISystem extends SystemPlugin {
 
       area.el = el;
       page.appendChild(el);
+
+      if (area.id === 'pageAreaCenter') {
+        this.#pageAreaCenter = el;
+      }
     });
 
     document.body.appendChild(page);
@@ -146,5 +154,13 @@ export class AppGUISystem extends SystemPlugin {
 
   updateTheme() {
     this.#styleSystem.setVariablesToElement(this.#page, this.#styleSystem.getCurrentTheme());
+  }
+
+  goTo403() {
+    this.#pageAreaCenter.innerHTML = Page403Html;
+  }
+
+  goTo404() {
+    this.#pageAreaCenter.innerHTML = Page404Html;
   }
 }
