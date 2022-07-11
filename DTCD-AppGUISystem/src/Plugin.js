@@ -166,20 +166,13 @@ export class AppGUISystem extends SystemPlugin {
     this.#goHomePage();
   }
 
-
-  // goHomePage() { 
-  //   this.getSystem('RouteSystem', '0.1.0').navigate('/workspaces');
-  // }
-
-
   #goHomePage() { 
     const buttons = this.#pageAreaCenter.querySelectorAll('.backHome-js');
     buttons.forEach( (button) => {
       button.addEventListener('click', () => {
         this.getSystem('RouteSystem', '0.1.0').navigate('/workspaces');
       });
-    })
-    
+    }) 
   }
 
 }
