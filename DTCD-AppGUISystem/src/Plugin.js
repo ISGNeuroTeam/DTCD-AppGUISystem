@@ -132,7 +132,7 @@ export class AppGUISystem extends SystemPlugin {
       el.onclick = () => {
         if (area.panel) {
           const guid = this.getGUID(area.panel);
-          this.#eventSystem.publishEvent('AreaClicked', { guid });
+          guid && this.#eventSystem.publishEvent('AreaClicked', { guid });
         }
       };
 

@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - redirect to home page
 
+### Fixed
+
+- publishing event 'AreaClicked', when 'guid' is undefined
+
 ## [0.2.0]
 
 ### Added
