@@ -132,7 +132,7 @@ export class AppGUISystem extends SystemPlugin {
       el.onclick = () => {
         if (area.panel) {
           const guid = this.getGUID(area.panel);
-          this.#eventSystem.publishEvent('AreaClicked', { guid });
+          guid && this.#eventSystem.publishEvent('AreaClicked', { guid });
         }
       };
 
@@ -158,9 +158,21 @@ export class AppGUISystem extends SystemPlugin {
 
   goTo403() {
     this.#pageAreaCenter.innerHTML = Page403Html;
+    this.#goHomePage();
   }
 
   goTo404() {
     this.#pageAreaCenter.innerHTML = Page404Html;
+    this.#goHomePage();
   }
+
+  #goHomePage() { 
+    const buttons = this.#pageAreaCenter.querySelectorAll('.backHome-js');
+    buttons.forEach( (button) => {
+      button.addEventListener('click', () => {
+        this.getSystem('RouteSystem', '0.1.0').navigate('/workspaces');
+      });
+    }) 
+  }
+
 }
