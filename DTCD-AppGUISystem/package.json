@@ -1,6 +1,6 @@
 {
   "name": "appguisystem",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Main GUI template manager for DTCD application",
   "main": "index.js",
   "private": "true",
