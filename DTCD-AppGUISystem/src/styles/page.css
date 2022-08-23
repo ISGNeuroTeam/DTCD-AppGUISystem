@@ -25,6 +25,7 @@
   grid-area: right;
   transition: transform .3s;
   transform: translateX(100%);
+  overflow: auto;
 }
 
 #pageAreaCenter {
