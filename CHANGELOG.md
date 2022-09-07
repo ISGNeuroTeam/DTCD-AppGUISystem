@@ -8,7 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- The scrolling in the settings panel
+
+- the scrolling in the settings panel
+
+### Changed
+
+- format of guid for gui panels
 
 ## [0.3.0]
 

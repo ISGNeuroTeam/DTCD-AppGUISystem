@@ -1,9 +1,4 @@
-import {
-  SystemPlugin,
-  LogSystemAdapter,
-  EventSystemAdapter,
-  StyleSystemAdapter,
-} from './../../DTCD-SDK';
+import { SystemPlugin, LogSystemAdapter, EventSystemAdapter, StyleSystemAdapter } from './../../DTCD-SDK';
 
 import Sidebar from './utils/Sidebar';
 import defaultPageAreas from './utils/defaultPageAreas';
@@ -65,6 +60,7 @@ export class AppGUISystem extends SystemPlugin {
     this.#pageAreas[area].panel = this.installPanel({
       name,
       version,
+      guid: `${name}_${area}`,
       selector: `#${mountID}`,
     });
   }
@@ -118,12 +114,7 @@ export class AppGUISystem extends SystemPlugin {
     page.className = 'page';
 
     this.#styleSystem.setVariablesToElement(page, this.#styleSystem.getCurrentTheme());
-    this.#eventSystem.subscribe(
-      this.#styleSystem.getGUID(),
-      'ThemeUpdate',
-      this.guid,
-      'updateTheme'
-    );
+    this.#eventSystem.subscribe(this.#styleSystem.getGUID(), 'ThemeUpdate', this.guid, 'updateTheme');
 
     Object.entries(this.#pageAreas).forEach(entry => {
       const [name, area] = entry;
@@ -166,13 +157,12 @@ export class AppGUISystem extends SystemPlugin {
     this.#goHomePage();
   }
 
-  #goHomePage() { 
+  #goHomePage() {
     const buttons = this.#pageAreaCenter.querySelectorAll('.backHome-js');
-    buttons.forEach( (button) => {
+    buttons.forEach(button => {
       button.addEventListener('click', () => {
         this.getSystem('RouteSystem', '0.1.0').navigate('/workspaces');
       });
-    }) 
+    });
   }
-
 }
