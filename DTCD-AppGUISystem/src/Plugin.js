@@ -1,8 +1,12 @@
-import { SystemPlugin, LogSystemAdapter, EventSystemAdapter, StyleSystemAdapter } from './../../DTCD-SDK';
+import {
+  SystemPlugin,
+  LogSystemAdapter,
+  EventSystemAdapter,
+  StyleSystemAdapter,
+} from './../../DTCD-SDK';
 
 import Sidebar from './utils/Sidebar';
 import defaultPageAreas from './utils/defaultPageAreas';
-
 import './styles/page.css';
 import './styles/page404.scss';
 import pluginMeta from './Plugin.Meta';
@@ -27,11 +31,17 @@ export class AppGUISystem extends SystemPlugin {
   constructor(guid) {
     super();
     this.guid = guid;
+
     this.#logSystem = new LogSystemAdapter('0.5.0', guid, pluginMeta.name);
-    this.#eventSystem = new EventSystemAdapter('0.4.0', guid);
     this.#styleSystem = new StyleSystemAdapter('0.4.0');
-    this.#eventSystem.registerPluginInstance(this, ['AreaClicked']);
     this.#workspaceSystem = this.getSystem('WorkspaceSystem', '0.4.0');
+
+    this.#eventSystem = new EventSystemAdapter('0.4.0', guid);
+    this.#eventSystem.registerPluginInstance(this, [
+      'AreaClicked',
+      'ToggledLeftSidebar',
+      'ToggledRightSidebar',
+    ]);
   }
 
   async init() {
@@ -95,12 +105,30 @@ export class AppGUISystem extends SystemPlugin {
     }
 
     const sidebar = this.#sidebars[side];
+    let sidebarStatus;
 
     if (typeof open !== 'boolean') {
-      return sidebar.toggle();
+      sidebarStatus = sidebar.toggle();
+    } else {
+      sidebarStatus = open ? sidebar.open() : sidebar.hide();
     }
 
-    return open ? sidebar.open() : sidebar.hide();
+    let eventName;
+    switch (side) {
+      case 'left':
+        eventName = 'ToggledLeftSidebar';
+        break;
+
+      case 'right':
+        eventName = 'ToggledRightSidebar';
+        break;
+    }
+
+    this.#eventSystem.publishEvent(eventName, {
+      isOpened: sidebarStatus,
+    });
+
+    return sidebarStatus;
   }
 
   #initPage() {
